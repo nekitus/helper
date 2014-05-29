@@ -1,0 +1,5 @@
+<project name="02.depend" default="all" >
+    <target name="all" depends="">
+
+    </target>
+</project>
