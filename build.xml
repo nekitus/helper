@@ -1,5 +1,25 @@
 <project name="02.depend" default="all" >
-    <target name="all" depends="">
-
+    <target name="all" depends="stuff.jar"/>
+    <target name="make.dirs" description="make 'bin' directories">
+        <mkdir dir="build"/>
+        <mkdir dir="build/class"/>
+    </target>
+    <target name="compile" description="compile" depends="make.dirs">
+        <javac destdir="build/class" classpathref="myclasspath">
+            <src path="src"/>
+        </javac>
+    </target>
+    <path id="myclasspath">
+        <fileset dir="lib">
+            <include name="**/*.jar"></include>
+        </fileset>
+    </path>
+    <target name="stuff.jar" description="make jar file" depends="compile">
+        <jar destfile="build/stuff.jar">
+            <fileset dir="build/class">
+                <include name="**/*.class"/>
+                <exclude name="**/CVS"/>
+            </fileset>
+        </jar>
     </target>
 </project>
