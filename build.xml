@@ -4,22 +4,25 @@
         <mkdir dir="build"/>
         <mkdir dir="build/class"/>
     </target>
+    <path id="myclasspath">
+        <fileset dir="lib"/>
+    </path>
     <target name="compile" description="compile" depends="make.dirs">
-        <javac destdir="build/class" classpathref="myclasspath">
+        <javac includeantruntime="false" destdir="build/class" classpathref="myclasspath">
             <src path="src"/>
         </javac>
     </target>
-    <path id="myclasspath">
-        <fileset dir="lib">
-            <include name="**/*.jar"></include>
-        </fileset>
-    </path>
+
     <target name="stuff.jar" description="make jar file" depends="compile">
-        <jar destfile="build/stuff.jar">
+        <jar destfile="./stuff.jar">
+            <zipgroupfileset includes="*.jar" dir="lib"/>
             <fileset dir="build/class">
                 <include name="**/*.class"/>
                 <exclude name="**/CVS"/>
             </fileset>
+            <manifest>
+                <attribute name="Main-Class" value="com.some.App"/>
+            </manifest>
         </jar>
     </target>
 </project>
