@@ -18,7 +18,7 @@ public class SSHReadFile
     }
 
     public static void readFine(){
-        
+
         String user = "n.kashtanov";
         String password = "Val67doc";
         String host = "dragons-vk-dev.i";
