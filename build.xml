@@ -21,7 +21,7 @@
                 <exclude name="**/CVS"/>
             </fileset>
             <manifest>
-                <attribute name="Main-Class" value="com.some.App"/>
+                <attribute name="Main-Class" value="com.some.SSHReadFile"/>
             </manifest>
         </jar>
     </target>

@@ -13,19 +13,31 @@ public class SSHReadFile
 {
     public static void main(String args[])
     {
-        String user = "nikita";
-        String password = "qwe";
-        String host = "192.168.1.5";
-        int port=22;
+//        readFine();
+        writeCommand();
+    }
 
-        String remoteFile="/home/john/test.txt";
+    public static void readFine(){
+        
+        String user = "n.kashtanov";
+        String password = "Val67doc";
+        String host = "dragons-vk-dev.i";
+        int port=22;
+        String privateKey = "~/.ssh/id_rsa";
+
+        String remoteFile="test.sh";
+
 
         try
         {
             JSch jsch = new JSch();
+            jsch.addIdentity(privateKey);
+            System.out.println("identity added ");
+
             Session session = jsch.getSession(user, host, port);
             session.setPassword(password);
             session.setConfig("StrictHostKeyChecking", "no");
+
             System.out.println("Establishing Connection...");
             session.connect();
             System.out.println("Connection established.");
@@ -35,6 +47,7 @@ public class SSHReadFile
             System.out.println("SFTP Channel created.");
 
 
+
             InputStream out= null;
             out= sftpChannel.get(remoteFile);
             BufferedReader br = new BufferedReader(new InputStreamReader(out));
@@ -42,7 +55,42 @@ public class SSHReadFile
             while ((line = br.readLine()) != null)
                 System.out.println(line);
             br.close();
+
         }
-        catch(Exception e){System.err.print(e);}
+        catch(Exception e){System.err.print("error" + e);}
+
+    }
+    public String sendCommand(String command)
+    {
+        StringBuilder outputBuffer = new StringBuilder();
+
+        try
+        {
+            Channel channel = sesConnection.openChannel("exec");
+            ((ChannelExec)channel).setCommand(command);
+            channel.connect();
+            InputStream commandOutput = channel.getInputStream();
+            int readByte = commandOutput.read();
+
+            while(readByte != 0xffffffff)
+            {
+                outputBuffer.append((char)readByte);
+                readByte = commandOutput.read();
+            }
+
+            channel.disconnect();
+        }
+        catch(IOException ioX)
+        {
+            logWarning(ioX.getMessage());
+            return null;
+        }
+        catch(JSchException jschX)
+        {
+            logWarning(jschX.getMessage());
+            return null;
+        }
+
+        return outputBuffer.toString();
     }
 }
